@@ -1,0 +1,85 @@
+=========================================================
+DINGEL HAFIZIA MADRASA
+FIREBASE FIRESTORE SECURITY RULES
+=========================================================
+
+IMPORTANT:
+এই rules বর্তমানে app-এর Firebase Firestore কাজ করার জন্য
+ব্যবহার করা হচ্ছে।
+
+বর্তমান app-এ Firebase Authentication ব্যবহার করা হয়নি।
+App-এর login system বর্তমানে app.js password দিয়ে চলছে।
+
+=========================================================
+FIRESTORE RULES
+=========================================================
+
+rules_version = '2';
+
+service cloud.firestore {
+
+  match /databases/{database}/documents {
+
+    /*
+     * STUDENTS
+     * Student information collection
+     */
+
+    match /students/{studentId} {
+
+      allow read, write: if true;
+
+    }
+
+
+    /*
+     * COLLECTIONS
+     * Fee payment / receipt collection
+     */
+
+    match /collections/{collectionId} {
+
+      allow read, write: if true;
+
+    }
+
+
+    /*
+     * Any other collection is denied
+     */
+
+    match /{document=**} {
+
+      allow read, write: if false;
+
+    }
+
+  }
+
+}
+
+
+=========================================================
+IMPORTANT SECURITY NOTE
+=========================================================
+
+বর্তমান rules-এর কারণে students এবং collections collection
+public read/write অবস্থায় থাকবে।
+
+অর্থাৎ Firebase Authentication ছাড়া এই app-কে সম্পূর্ণ
+secure করা সম্ভব নয়।
+
+FINAL SECURITY VERSION-এ:
+
+1. Firebase Authentication ব্যবহার করা হবে।
+2. শুধু authenticated admin user database access করতে পারবে।
+3. Unauthorized user database read/write করতে পারবে না।
+4. Students collection protected থাকবে।
+5. Collections collection protected থাকবে।
+
+বর্তমান app-এর functionality ঠিক রাখার জন্য এই temporary
+rules ব্যবহার করা হচ্ছে।
+
+=========================================================
+END
+=========================================================
