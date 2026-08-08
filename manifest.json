@@ -1,0 +1,26 @@
+{
+  "name": "ডিঙ্গেল হাফিজিয়া মাদ্রাসা",
+  "short_name": "ডিঙ্গেল মাদ্রাসা",
+  "description": "ডিঙ্গেল হাফিজিয়া মাদ্রাসার Student & Fee Management System",
+  "lang": "bn",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#047857",
+  "background_color": "#f1f5f9",
+  "categories": [
+    "education",
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f54c.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
