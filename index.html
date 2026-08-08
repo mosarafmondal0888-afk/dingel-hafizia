@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#073b3a">
+<meta name="description" content="ডিঙ্গেল হাফিজিয়া মাদ্রাসা Professional Management System">
+<title>ডিঙ্গেল হাফিজিয়া মাদ্রাসা | Management System</title>
+<link rel="icon" href="logo.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div id="loadingScreen" class="loading hidden">
+  <div class="spinner"></div><b id="loadingText">ডাটা লোড হচ্ছে...</b>
+</div>
+
+<section id="loginScreen" class="login-page">
+  <div class="login-glow glow-a"></div><div class="login-glow glow-b"></div>
+  <div class="login-card glass">
+    <img src="logo.png" class="login-logo" alt="Dingel Hafizia Madrasa">
+    <div class="eyebrow">PROFESSIONAL MANAGEMENT SYSTEM</div>
+    <h1>ডিঙ্গেল হাফিজিয়া মাদ্রাসা</h1>
+    <p>ছাত্র, ফি ও রিপোর্ট — সবকিছু এক জায়গায়</p>
+    <form id="loginForm">
+      <label>অ্যাডমিন পাসওয়ার্ড</label>
+      <div class="password-field">
+        <input id="passwordInput" type="password" placeholder="পাসওয়ার্ড লিখুন" required>
+        <button type="button" onclick="togglePassword()"><i id="passwordIcon" class="fa-solid fa-eye"></i></button>
+      </div>
+      <div id="errorMessage" class="error">ভুল পাসওয়ার্ড। আবার চেষ্টা করুন।</div>
+      <button class="btn primary wide" type="submit"><i class="fa-solid fa-right-to-bracket"></i> নিরাপদ লগইন</button>
+    </form>
+    <small>© ডিঙ্গেল হাফিজিয়া মাদ্রাসা</small>
+  </div>
+</section>
+
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+<div id="app" class="app hidden">
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <img src="logo.png" alt="Logo">
+      <div><strong>ডিঙ্গেল হাফিজিয়া</strong><span>মাদ্রাসা ম্যানেজমেন্ট</span></div>
+    </div>
+    <div class="side-label">MAIN MENU</div>
+    <nav>
+      <button class="nav-item active" data-section="dashboardSection" onclick="showSection('dashboardSection')"><i class="fa-solid fa-grid-2"></i><span>ড্যাশবোর্ড</span></button>
+      <button class="nav-item" data-section="studentsSection" onclick="showSection('studentsSection')"><i class="fa-solid fa-user-graduate"></i><span>ছাত্র তালিকা</span></button>
+      <button class="nav-item" data-section="collectionSection" onclick="showSection('collectionSection')"><i class="fa-solid fa-wallet"></i><span>ফি আদায়</span></button>
+      <button class="nav-item" data-section="reportsSection" onclick="showSection('reportsSection')"><i class="fa-solid fa-chart-pie"></i><span>রিপোর্ট</span></button>
+    </nav>
+    <div class="side-bottom">
+      <div class="mini-profile"><div class="avatar">DH</div><div><b>Administrator</b><small>Management</small></div></div>
+      <button class="logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left"><button class="icon-btn mobile-menu" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div><h2 id="pageTitle">ড্যাশবোর্ড</h2><p id="pageSubtitle">মাদ্রাসার সামগ্রিক হিসাব ও তথ্য</p></div>
+      </div>
+      <div class="top-right"><div class="live-date"><i class="fa-regular fa-calendar"></i><span id="todayText"></span></div><button class="icon-btn" onclick="loadApplicationData()" title="Refresh"><i class="fa-solid fa-rotate"></i></button><div class="avatar top-avatar" onclick="handleLogout()">DH</div></div>
+    </header>
+
+    <div class="content">
+      <section id="dashboardSection" class="content-section">
+        <div class="hero">
+          <div><div class="eyebrow light">ASSALAMU ALAIKUM</div><h1>স্বাগতম, Administrator 👋</h1><p>মাদ্রাসার গুরুত্বপূর্ণ তথ্য ও আর্থিক হিসাব এক নজরে দেখুন।</p></div>
+          <div class="hero-art"><i class="fa-solid fa-mosque"></i></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-icon cyan"><i class="fa-solid fa-user-graduate"></i></div><div><span>মোট ছাত্র</span><b id="totalStudents">০</b></div></div>
+          <div class="stat"><div class="stat-icon green"><i class="fa-solid fa-indian-rupee-sign"></i></div><div><span>মোট ফি আদায়</span><b id="totalCollection">₹0</b></div></div>
+          <div class="stat"><div class="stat-icon gold"><i class="fa-solid fa-calendar-check"></i></div><div><span>এই মাসে আদায়</span><b id="monthlyCollection">₹0</b></div></div>
+          <div class="stat"><div class="stat-icon violet"><i class="fa-solid fa-hand-holding-heart"></i></div><div><span>ফ্রি ছাত্র</span><b id="freeStudents">০</b></div></div>
+        </div>
+        <div class="quick-grid">
+          <button onclick="openStudentModal()" class="quick glass"><i class="fa-solid fa-user-plus"></i><span>নতুন ছাত্র যোগ</span><small>Student Admission</small></button>
+          <button onclick="openCollectionModal()" class="quick glass"><i class="fa-solid fa-receipt"></i><span>ফি জমা</span><small>New Collection</small></button>
+          <button onclick="showSection('reportsSection')" class="quick glass"><i class="fa-solid fa-chart-column"></i><span>রিপোর্ট দেখুন</span><small>Monthly Reports</small></button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>সাম্প্রতিক ফি আদায়</h3><p>সর্বশেষ ৫টি রেকর্ড</p></div><button class="btn secondary" onclick="showSection('collectionSection')">সব দেখুন <i class="fa-solid fa-arrow-right"></i></button></div>
+          <div class="table-scroll"><table><thead><tr><th>রসিদ</th><th>ছাত্র</th><th>রোল</th><th>মাস</th><th>পরিমাণ</th><th>তারিখ</th></tr></thead><tbody id="recentCollectionsBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="studentsSection" class="content-section hidden">
+        <div class="section-title"><div><div class="eyebrow">STUDENT MANAGEMENT</div><h2>ছাত্র তালিকা</h2><p>ভর্তি, সম্পাদনা, অনুসন্ধান ও ছাত্র তথ্য ব্যবস্থাপনা</p></div><button class="btn primary" onclick="openStudentModal()"><i class="fa-solid fa-plus"></i> নতুন ছাত্র</button></div>
+        <div class="toolbar"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="studentSearch" placeholder="নাম, রোল, শ্রেণী, ফোন দিয়ে খুঁজুন..."></div><button class="btn secondary" onclick="exportStudentsCSV()"><i class="fa-solid fa-file-csv"></i> Excel/CSV</button></div>
+        <div class="panel"><div class="table-scroll"><table><thead><tr><th>#</th><th>রোল</th><th>ছাত্রের নাম</th><th>শ্রেণী</th><th>অভিভাবক</th><th>ফোন</th><th>ধরন</th><th>মাসিক ফি</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody></table></div><div class="pagination"><button id="studentPrev" class="btn secondary" onclick="previousStudentPage()">← আগের</button><span id="studentPageInfo">০</span><button id="studentNext" class="btn secondary" onclick="nextStudentPage()">পরের →</button></div></div>
+      </section>
+
+      <section id="collectionSection" class="content-section hidden">
+        <div class="section-title"><div><div class="eyebrow">FEE MANAGEMENT</div><h2>ফি আদায়</h2><p>সকল জমা, রসিদ ও লেনদেনের রেকর্ড</p></div><button class="btn primary" onclick="openCollectionModal()"><i class="fa-solid fa-plus"></i> নতুন ফি জমা</button></div>
+        <div class="toolbar"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="collectionSearch" placeholder="রসিদ, ছাত্র, রোল বা মাস দিয়ে খুঁজুন..."></div><button class="btn secondary" onclick="exportCollectionsCSV()"><i class="fa-solid fa-file-csv"></i> Export</button></div>
+        <div class="collection-summary"><div><span>সর্বমোট আদায়</span><b id="collectionPageTotal">₹0</b></div><div><span>মোট রসিদ</span><b id="totalReceipts">০</b></div></div>
+        <div class="panel"><div class="table-scroll"><table><thead><tr><th>#</th><th>রসিদ</th><th>ছাত্র</th><th>রোল</th><th>শ্রেণী</th><th>মাস</th><th>পরিমাণ</th><th>তারিখ</th><th>Action</th></tr></thead><tbody id="collectionsTableBody"></tbody></table></div></div>
+      </section>
+
+      
+      <section id="duesSection" class="content-section hidden">
+        <div class="section-title"><div><div class="eyebrow">DUE MANAGEMENT</div><h2>বকেয়া ফি</h2><p>মাসিক ফি, জমা ও বকেয়া এক নজরে</p></div><button class="btn secondary" onclick="exportDuesCSV()"><i class="fa-solid fa-file-csv"></i> Export</button></div>
+        <div class="stats mini-stats">
+          <div class="stat"><div class="stat-icon gold"><i class="fa-solid fa-hourglass-half"></i></div><div><span>মোট বকেয়া</span><b id="totalDue">₹0</b></div></div>
+          <div class="stat"><div class="stat-icon cyan"><i class="fa-solid fa-users"></i></div><div><span>বকেয়া ছাত্র</span><b id="dueStudents">০</b></div></div>
+        </div>
+        <div class="toolbar"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="dueSearch" placeholder="ছাত্র, রোল বা শ্রেণী দিয়ে খুঁজুন..."></div></div>
+        <div class="panel"><div class="table-scroll"><table><thead><tr><th>#</th><th>রোল</th><th>ছাত্র</th><th>শ্রেণী</th><th>মাসিক ফি</th><th>এই মাসে জমা</th><th>বকেয়া</th><th>Action</th></tr></thead><tbody id="duesTableBody"></tbody></table></div></div>
+      </section>
+
+      <section id="accountsSection" class="content-section hidden">
+        <div class="section-title"><div><div class="eyebrow">MADRASAH ACCOUNTS</div><h2>মাদ্রাসার হিসাব</h2><p>আয়, খরচ, ব্যালেন্স ও মাসভিত্তিক আর্থিক অবস্থা</p></div><button class="btn primary" onclick="openIncomeModal()"><i class="fa-solid fa-plus"></i> অন্যান্য আয়</button></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-icon green"><i class="fa-solid fa-arrow-trend-up"></i></div><div><span>মোট আয়</span><b id="accountsIncome">₹0</b></div></div>
+          <div class="stat"><div class="stat-icon gold"><i class="fa-solid fa-arrow-trend-down"></i></div><div><span>মোট খরচ</span><b id="accountsExpense">₹0</b></div></div>
+          <div class="stat"><div class="stat-icon cyan"><i class="fa-solid fa-scale-balanced"></i></div><div><span>বর্তমান ব্যালেন্স</span><b id="accountsBalance">₹0</b></div></div>
+          <div class="stat"><div class="stat-icon violet"><i class="fa-solid fa-calendar-days"></i></div><div><span>এই মাসের ব্যালেন্স</span><b id="accountsMonthlyBalance">₹0</b></div></div>
+        </div>
+        <div class="account-grid">
+          <div class="panel"><div class="panel-head"><div><h3>মাসভিত্তিক হিসাব</h3><p>আয় − খরচ = ব্যালেন্স</p></div></div><div class="table-scroll"><table><thead><tr><th>মাস</th><th>আয়</th><th>খরচ</th><th>ব্যালেন্স</th></tr></thead><tbody id="accountsMonthlyBody"></tbody></table></div></div>
+          <div class="panel"><div class="panel-head"><div><h3>অন্যান্য আয়</h3><p>দান, অনুদান, ভর্তি ফি ইত্যাদি</p></div></div><div class="table-scroll"><table><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th>Action</th></tr></thead><tbody id="incomeTableBody"></tbody></table></div></div>
+        </div>
+      </section>
+
+      <section id="expensesSection" class="content-section hidden">
+        <div class="section-title"><div><div class="eyebrow">EXPENSE MANAGEMENT</div><h2>মাদ্রাসার খরচ</h2><p>খাবার, বেতন, বিদ্যুৎ, চিকিৎসা, মেরামতসহ সব খরচের হিসাব</p></div><button class="btn primary" onclick="openExpenseModal()"><i class="fa-solid fa-plus"></i> নতুন খরচ</button></div>
+        <div class="toolbar"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="expenseSearch" placeholder="খরচের ধরন, বিবরণ বা তারিখ দিয়ে খুঁজুন..."></div><button class="btn secondary" onclick="exportExpensesCSV()"><i class="fa-solid fa-file-csv"></i> Export</button></div>
+        <div class="collection-summary"><div><span>মোট খরচ</span><b id="expensePageTotal">₹0</b></div><div><span>মোট খরচের রেকর্ড</span><b id="expenseCount">০</b></div></div>
+        <div class="panel"><div class="table-scroll"><table><thead><tr><th>#</th><th>তারিখ</th><th>খরচের ধরন</th><th>বিবরণ</th><th>পরিমাণ</th><th>পেমেন্ট</th><th>Action</th></tr></thead><tbody id="expensesTableBody"></tbody></table></div></div>
+      </section>
+
+      <section id="reportsSection" class="content-section hidden">
+        <div class="section-title"><div><div class="eyebrow">COMPLETE REPORTS</div><h2>রিপোর্ট সেন্টার</h2><p>ছাত্র, ফি, বকেয়া, আয় ও খরচের পূর্ণাঙ্গ রিপোর্ট</p></div><button class="btn secondary" onclick="printReport()"><i class="fa-solid fa-print"></i> Print</button></div>
+        <div class="report-cards">
+          <div class="report"><span>মোট ছাত্র</span><b id="reportTotalStudents">০</b></div>
+          <div class="report"><span>সাধারণ</span><b id="reportGeneralStudents">০</b></div>
+          <div class="report"><span>এতিম</span><b id="reportOrphanStudents">০</b></div>
+          <div class="report"><span>গরিব</span><b id="reportPoorStudents">০</b></div>
+          <div class="report wide"><span>মোট ফি আদায়</span><b id="reportTotalCollection">₹0</b></div>
+          <div class="report wide"><span>মোট বকেয়া</span><b id="reportTotalDue">₹0</b></div>
+          <div class="report wide"><span>মোট অন্যান্য আয়</span><b id="reportTotalIncome">₹0</b></div>
+          <div class="report wide"><span>মোট খরচ</span><b id="reportTotalExpense">₹0</b></div>
+          <div class="report wide"><span>বর্তমান ব্যালেন্স</span><b id="reportBalance">₹0</b></div>
+          <div class="report wide"><span>এই মাসের ব্যালেন্স</span><b id="reportMonthlyBalance">₹0</b></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><h3>মাসভিত্তিক আর্থিক রিপোর্ট</h3><p>ফি + অন্যান্য আয় − খরচ</p></div></div><div class="table-scroll"><table><thead><tr><th>মাস</th><th>ফি আদায়</th><th>অন্যান্য আয়</th><th>মোট আয়</th><th>খরচ</th><th>ব্যালেন্স</th></tr></thead><tbody id="monthlyReportBody"></tbody></table></div></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div id="studentModal" class="modal hidden"><div class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">STUDENT PROFILE</div><h2 id="studentModalTitle">নতুন ছাত্র ভর্তি</h2><p>ছাত্রের তথ্য সঠিকভাবে পূরণ করুন</p></div><button class="close" onclick="closeStudentModal()">×</button></div>
+  <form id="addStudentForm"><input id="editingStudentId" type="hidden"><div class="form-grid">
+    <div class="field"><label>ছাত্রের নাম *</label><input id="studentName" required></div><div class="field"><label>রোল *</label><input id="studentRoll" required></div>
+    <div class="field"><label>শ্রেণী *</label><input id="studentClass" placeholder="যেমন: HIFZ / NAZERA" required></div><div class="field"><label>অভিভাবকের নাম</label><input id="guardianName"></div>
+    <div class="field"><label>মোবাইল নম্বর</label><input id="guardianPhone" inputmode="numeric" maxlength="10" placeholder="১০ সংখ্যার নম্বর"></div>
+    <div class="field"><label>ছাত্রের ধরন</label><select id="studentType"><option value="General">সাধারণ</option><option value="Orphan">এতিম — ফ্রি</option><option value="Poor">দরিদ্র — ফ্রি</option></select></div>
+    <div class="field full"><label>মাসিক ফি (₹)</label><input id="studentMonthly" type="number" min="0" placeholder="যেমন: 500"></div>
+  </div><div class="modal-actions"><button type="button" class="btn secondary" onclick="closeStudentModal()">বাতিল</button><button class="btn primary"><i class="fa-solid fa-floppy-disk"></i> সেভ করুন</button></div></form>
+</div></div>
+
+<div id="collectionModal" class="modal hidden"><div class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">FEE COLLECTION</div><h2>ফি জমা</h2><p>জমা সম্পন্ন হলে সুন্দর রসিদ প্রিন্ট হবে</p></div><button class="close" onclick="closeCollectionModal()">×</button></div>
+  <form id="collectionForm"><div class="form-grid">
+    <div class="field full"><label>ছাত্র নির্বাচন করুন *</label><select id="collectionStudent" required><option value="">ছাত্র নির্বাচন করুন</option></select></div>
+    <div class="field"><label>মাস</label><select id="collectionMonth"></select></div><div class="field"><label>তারিখ</label><input id="collectionDate" type="date"></div>
+    <div class="field"><label>ফি-এর পরিমাণ (₹) *</label><input id="collectionAmount" type="number" min="1" required></div><div class="field"><label>নোট</label><input id="collectionNote" placeholder="ঐচ্ছিক"></div>
+  </div><div class="modal-actions"><button type="button" class="btn secondary" onclick="closeCollectionModal()">বাতিল</button><button class="btn primary"><i class="fa-solid fa-receipt"></i> ফি জমা করুন</button></div></form>
+</div></div>
+
+
+<div id="expenseModal" class="modal hidden"><div class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">EXPENSE ENTRY</div><h2>নতুন খরচ</h2><p>মাদ্রাসার খরচের পূর্ণ রেকর্ড</p></div><button class="close" onclick="closeExpenseModal()">×</button></div>
+  <form id="expenseForm"><div class="form-grid">
+    <div class="field"><label>তারিখ *</label><input id="expenseDate" type="date" required></div>
+    <div class="field"><label>খরচের ধরন *</label><select id="expenseCategory" required><option>খাবার / রান্না</option><option>শিক্ষক / কর্মচারী বেতন</option><option>বিদ্যুৎ / গ্যাস</option><option>পানি</option><option>চিকিৎসা</option><option>শিক্ষা সামগ্রী</option><option>বাড়ি / মাদ্রাসা ভাড়া</option><option>মেরামত</option><option>যাতায়াত</option><option>অন্যান্য</option></select></div>
+    <div class="field full"><label>বিবরণ *</label><input id="expenseDescription" required placeholder="যেমন: আগস্ট মাসের বাজার"></div>
+    <div class="field"><label>পরিমাণ (₹) *</label><input id="expenseAmount" type="number" min="1" required></div>
+    <div class="field"><label>পেমেন্ট মাধ্যম</label><select id="expensePayment"><option>Cash</option><option>Bank</option><option>UPI</option><option>Other</option></select></div>
+    <div class="field full"><label>নোট</label><textarea id="expenseNote" rows="2"></textarea></div>
+  </div><div class="modal-actions"><button type="button" class="btn secondary" onclick="closeExpenseModal()">বাতিল</button><button class="btn primary"><i class="fa-solid fa-floppy-disk"></i> খরচ সেভ করুন</button></div></form>
+</div></div>
+
+<div id="incomeModal" class="modal hidden"><div class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">OTHER INCOME</div><h2>অন্যান্য আয়</h2><p>দান, অনুদান, ভর্তি/অন্যান্য আয়ের রেকর্ড</p></div><button class="close" onclick="closeIncomeModal()">×</button></div>
+  <form id="incomeForm"><div class="form-grid">
+    <div class="field"><label>তারিখ *</label><input id="incomeDate" type="date" required></div>
+    <div class="field"><label>আয়ের ধরন *</label><select id="incomeCategory"><option>দান</option><option>অনুদান</option><option>ভর্তি ফি</option><option>অন্যান্য</option></select></div>
+    <div class="field full"><label>বিবরণ *</label><input id="incomeDescription" required></div>
+    <div class="field"><label>পরিমাণ (₹) *</label><input id="incomeAmount" type="number" min="1" required></div>
+    <div class="field"><label>পেমেন্ট মাধ্যম</label><select id="incomePayment"><option>Cash</option><option>Bank</option><option>UPI</option><option>Other</option></select></div>
+  </div><div class="modal-actions"><button type="button" class="btn secondary" onclick="closeIncomeModal()">বাতিল</button><button class="btn primary"><i class="fa-solid fa-floppy-disk"></i> আয় সেভ করুন</button></div></form>
+</div></div>
+
+<div id="toast" class="toast"><i id="toastIcon"></i><span id="toastMessage"></span></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="app.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>
