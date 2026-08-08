@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    /*
+      Current app uses its own admin password, not Firebase Auth.
+      These rules allow the current GitHub Pages app to work.
+      For real production security, migrate the login to Firebase Authentication
+      and restrict access to authenticated users.
+    */
+    match /students/{id} {
+      allow read, write: if true;
+    }
+    match /collections/{id} {
+      allow read, write: if true;
+    }
+  }
+}
