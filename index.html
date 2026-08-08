@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0f766e">
+<title>ডিঙ্গেল হাফিজিয়া মাদ্রাসা — Management System</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div id="loadingScreen" class="loading-screen hidden">
+  <div class="loader"></div>
+  <div id="loadingText">ডাটা লোড হচ্ছে...</div>
+</div>
+
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="brand-mark"><i class="fa-solid fa-mosque"></i></div>
+    <h1>ডিঙ্গেল হাফিজিয়া মাদ্রাসা</h1>
+    <p>Professional Management System</p>
+    <form id="loginForm">
+      <label>পাসওয়ার্ড</label>
+      <div class="password-box">
+        <input id="passwordInput" type="password" placeholder="পাসওয়ার্ড লিখুন" autocomplete="current-password" required>
+        <button type="button" onclick="togglePassword()" aria-label="Show password"><i id="passwordIcon" class="fa-solid fa-eye"></i></button>
+      </div>
+      <div id="errorMessage" class="error-message">ভুল পাসওয়ার্ড। আবার চেষ্টা করুন।</div>
+      <button class="primary-btn full" type="submit"><i class="fa-solid fa-right-to-bracket"></i> লগইন</button>
+    </form>
+    <small>Management Dashboard</small>
+  </div>
+</section>
+
+<section id="dashboardScreen" class="app hidden">
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark small"><i class="fa-solid fa-mosque"></i></div>
+      <div><strong>ডিঙ্গেল হাফিজিয়া</strong><small>মাদ্রাসা</small></div>
+    </div>
+    <nav>
+      <button class="menu-item active" data-section="dashboardSection" onclick="showSection('dashboardSection')"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</button>
+      <button class="menu-item" data-section="studentsSection" onclick="showSection('studentsSection')"><i class="fa-solid fa-users"></i> ছাত্র তালিকা</button>
+      <button class="menu-item" data-section="collectionSection" onclick="showSection('collectionSection')"><i class="fa-solid fa-money-bill-wave"></i> ফি আদায়</button>
+      <button class="menu-item" data-section="reportsSection" onclick="showSection('reportsSection')"><i class="fa-solid fa-chart-column"></i> রিপোর্ট</button>
+    </nav>
+    <button class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-only" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+      <div>
+        <h2 id="pageTitle">ড্যাশবোর্ড</h2>
+        <p id="pageSubtitle">মাদ্রাসার সামগ্রিক হিসাব ও তথ্য</p>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" onclick="loadApplicationData()" title="Refresh"><i class="fa-solid fa-rotate"></i></button>
+        <button class="avatar" onclick="handleLogout()">DH</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="dashboardSection" class="content-section">
+        <div class="welcome">
+          <div><h3>আসসালামু আলাইকুম 👋</h3><p>মাদ্রাসার আজকের সার্বিক অবস্থা এক নজরে দেখুন।</p></div>
+          <div class="today" id="todayText"></div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-user-graduate"></i></div><div><span>মোট ছাত্র</span><strong id="totalStudents">০</strong></div></div>
+          <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-sack-dollar"></i></div><div><span>মোট আদায়</span><strong id="totalCollection">₹0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon orange"><i class="fa-solid fa-calendar-check"></i></div><div><span>এই মাসে আদায়</span><strong id="monthlyCollection">₹0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-heart"></i></div><div><span>ফ্রি ছাত্র</span><strong id="freeStudents">০</strong></div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div><h3>সাম্প্রতিক ফি আদায়</h3><p>শেষ ৫টি রেকর্ড</p></div><button class="secondary-btn" onclick="showSection('collectionSection')">সব দেখুন</button></div>
+          <div class="table-wrap"><table><thead><tr><th>রসিদ</th><th>ছাত্র</th><th>মাস</th><th>পরিমাণ</th><th>তারিখ</th></tr></thead><tbody id="recentCollectionsBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="studentsSection" class="content-section hidden">
+        <div class="section-head"><div><h3>ছাত্র তালিকা</h3><p>ছাত্র যোগ, সম্পাদনা, অনুসন্ধান ও মুছে ফেলা</p></div><button class="primary-btn" onclick="openStudentModal()"><i class="fa-solid fa-plus"></i> নতুন ছাত্র</button></div>
+        <div class="toolbar"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="studentSearch" placeholder="নাম, রোল, শ্রেণী বা ফোন দিয়ে খুঁজুন..."></div><button class="secondary-btn" onclick="exportStudentsCSV()"><i class="fa-solid fa-file-csv"></i> Export</button></div>
+        <div class="panel"><div class="table-wrap"><table><thead><tr><th>#</th><th>রোল</th><th>নাম</th><th>শ্রেণী</th><th>অভিভাবক</th><th>ফোন</th><th>ধরন</th><th>মাসিক ফি</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody></table></div>
+        <div class="pagination"><button id="studentPrev" class="secondary-btn" onclick="previousStudentPage()">‹ আগের</button><span id="studentPageInfo">০</span><button id="studentNext" class="secondary-btn" onclick="nextStudentPage()">পরের ›</button></div></div>
+      </section>
+
+      <section id="collectionSection" class="content-section hidden">
+        <div class="section-head"><div><h3>ফি আদায়</h3><p>সকল ফি জমার রেকর্ড</p></div><button class="primary-btn" onclick="openCollectionModal()"><i class="fa-solid fa-plus"></i> ফি জমা</button></div>
+        <div class="toolbar"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="collectionSearch" placeholder="রসিদ, ছাত্র, রোল বা মাস দিয়ে খুঁজুন..."></div><button class="secondary-btn" onclick="exportCollectionsCSV()"><i class="fa-solid fa-file-csv"></i> Export</button></div>
+        <div class="summary-line"><span>মোট আদায়: <strong id="collectionPageTotal">₹0</strong></span><span>মোট রসিদ: <strong id="totalReceipts">০</strong></span></div>
+        <div class="panel"><div class="table-wrap"><table><thead><tr><th>#</th><th>রসিদ</th><th>ছাত্র</th><th>রোল</th><th>শ্রেণী</th><th>মাস</th><th>পরিমাণ</th><th>তারিখ</th><th>Action</th></tr></thead><tbody id="collectionsTableBody"></tbody></table></div></div>
+      </section>
+
+      <section id="reportsSection" class="content-section hidden">
+        <div class="section-head"><div><h3>রিপোর্ট</h3><p>ছাত্র ও আর্থিক রিপোর্ট</p></div><button class="secondary-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button></div>
+        <div class="report-grid">
+          <div class="report-card"><span>মোট ছাত্র</span><strong id="reportTotalStudents">০</strong></div>
+          <div class="report-card"><span>সাধারণ ছাত্র</span><strong id="reportGeneralStudents">০</strong></div>
+          <div class="report-card"><span>এতিম ছাত্র</span><strong id="reportOrphanStudents">০</strong></div>
+          <div class="report-card"><span>দরিদ্র ছাত্র</span><strong id="reportPoorStudents">০</strong></div>
+          <div class="report-card"><span>মোট আদায়</span><strong id="reportTotalCollection">₹0</strong></div>
+          <div class="report-card"><span>এই মাসে আদায়</span><strong id="reportMonthlyCollection">₹0</strong></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><h3>মাসভিত্তিক আদায়</h3></div></div><div class="table-wrap"><table><thead><tr><th>মাস</th><th>আদায়</th></tr></thead><tbody id="monthlyReportBody"></tbody></table></div></div>
+      </section>
+    </div>
+  </main>
+</section>
+
+<!-- Student Modal -->
+<div id="studentModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head"><div><h3 id="studentModalTitle">নতুন ছাত্র ভর্তি</h3><p>ছাত্রের তথ্য পূরণ করুন</p></div><button class="close-btn" onclick="closeStudentModal()">×</button></div>
+    <form id="addStudentForm">
+      <input id="editingStudentId" type="hidden">
+      <div class="form-grid">
+        <div class="field"><label>ছাত্রের নাম *</label><input id="studentName" required></div>
+        <div class="field"><label>রোল *</label><input id="studentRoll" required></div>
+        <div class="field"><label>শ্রেণী *</label><input id="studentClass" required placeholder="যেমন: HIFZ"></div>
+        <div class="field"><label>অভিভাবকের নাম</label><input id="guardianName"></div>
+        <div class="field"><label>মোবাইল</label><input id="guardianPhone" inputmode="numeric" maxlength="10" placeholder="10 digit"></div>
+        <div class="field"><label>ছাত্রের ধরন</label><select id="studentType"><option value="General">সাধারণ</option><option value="Orphan">এতিম — ফ্রি</option><option value="Poor">দরিদ্র — ফ্রি</option></select></div>
+        <div class="field full-field"><label>মাসিক ফি</label><input id="studentMonthly" type="number" min="0" placeholder="₹"></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="secondary-btn" onclick="closeStudentModal()">বাতিল</button><button type="submit" class="primary-btn"><i class="fa-solid fa-floppy-disk"></i> সেভ করুন</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Collection Modal -->
+<div id="collectionModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head"><div><h3>ফি জমা</h3><p>নতুন ফি রেকর্ড তৈরি করুন</p></div><button class="close-btn" onclick="closeCollectionModal()">×</button></div>
+    <form id="collectionForm">
+      <div class="form-grid">
+        <div class="field full-field"><label>ছাত্র *</label><select id="collectionStudent" required><option value="">ছাত্র নির্বাচন করুন</option></select></div>
+        <div class="field"><label>মাস</label><select id="collectionMonth"></select></div>
+        <div class="field"><label>তারিখ</label><input id="collectionDate" type="date"></div>
+        <div class="field"><label>পরিমাণ *</label><input id="collectionAmount" type="number" min="1" required></div>
+        <div class="field"><label>নোট</label><input id="collectionNote" placeholder="ঐচ্ছিক"></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="secondary-btn" onclick="closeCollectionModal()">বাতিল</button><button type="submit" class="primary-btn"><i class="fa-solid fa-receipt"></i> জমা করুন</button></div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast"><i id="toastIcon"></i><span id="toastMessage"></span></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
